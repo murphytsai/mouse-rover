@@ -11,13 +11,13 @@ from xmlrpc.client import Boolean
 import autopy
 
 
-logger = logging.getLogger('')
+logger = logging.getLogger("")
 logFormatter = logging.Formatter(
-    '%(asctime)s.%(msecs)03d [%(threadName)7s] - %(message)s',
-    datefmt='%Y-%m-%d %H:%M:%S',
+    "%(asctime)s.%(msecs)03d [%(threadName)7s] - %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
 )
 fileHandler = TimedRotatingFileHandler(
-    'mouse-rover.log', when='D', interval=1, backupCount=4
+    "mouse-rover.log", when="D", interval=1, backupCount=4
 )
 fileHandler.setFormatter(logFormatter)
 logger.addHandler(fileHandler)
@@ -33,9 +33,9 @@ BORDER_SIZE = 10
 
 
 def sigint_handler(sig, frame) -> None:
-    '''
-       handle ctrl-c
-    '''
+    """
+    handle ctrl-c
+    """
 
     logger.info("Bye")
     sys.exit(0)
@@ -45,9 +45,9 @@ signal.signal(signal.SIGINT, sigint_handler)
 
 
 def possible_in_hot_corner(x, y) -> Boolean:
-    '''
-       detect if current pos in hot corner.
-    '''
+    """
+    detect if current pos in hot corner.
+    """
 
     if (
         x < BORDER_SIZE
@@ -62,9 +62,9 @@ def possible_in_hot_corner(x, y) -> Boolean:
 
 
 def move_to_next_location(small=False) -> tuple():
-    '''
-       move to next location
-    '''
+    """
+    move to next location
+    """
 
     curr_loc = get_current_location()
     if small:
@@ -84,9 +84,9 @@ def move_to_next_location(small=False) -> tuple():
 
 
 def get_current_location() -> tuple():
-    '''
-       get current location
-    '''
+    """
+    get current location
+    """
 
     loc = autopy.mouse.location()
     loc = tuple(map(lambda x: int(x), loc))
@@ -94,12 +94,12 @@ def get_current_location() -> tuple():
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='control for mouse-rover.')
-    parser.add_argument('-a', '--always', action="store_true", help="execute always.")
+    parser = argparse.ArgumentParser(description="control for mouse-rover.")
+    parser.add_argument("-a", "--always", action="store_true", help="execute always.")
     parser.add_argument(
-        '-s', '--small', action="store_true", help="move in small range."
+        "-s", "--small", action="store_true", help="move in small range."
     )
-    parser.add_argument('-t', '--time', type=int, default=10, help="trigger interval.")
+    parser.add_argument("-t", "--time", type=int, default=10, help="trigger interval.")
     args = parser.parse_args()
     move_small = args.small
     interval = args.time
