@@ -78,7 +78,11 @@ def move_to_next_location(small=False) -> tuple():
         next_y = random.randint(BORDER_SIZE, SCR_MAX_HEIGHT - BORDER_SIZE)
     next_loc = (next_x, next_y)
 
-    autopy.mouse.move(*next_loc)
+    try:
+        autopy.mouse.move(*next_loc)
+    except ValueError as e:
+        logger.error("ValueError: %s", e)
+        return curr_loc
 
     return next_loc
 
