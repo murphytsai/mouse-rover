@@ -1,7 +1,13 @@
 
-## Funny for :
+## Features
 1. You can play how fast to find mouse move to where to practice your eyeball.
-2. keep mouse alive.
+2. Keep mouse alive and prevent system from sleeping.
+3. Avoid triggering Hot Corners on macOS.
+
+## Documentation
+
+- **[Interactive Demo](demo.html)** - Open in browser to see how Mouse Rover works visually
+- **[Design Specification](DESIGN_SPEC.md)** - Complete design guide for Figma/UI implementation
 
 ## Usage
 ```

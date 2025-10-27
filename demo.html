@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mouse Rover - Interactive Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            padding: 40px;
+        }
+
+        .left-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.07);
+        }
+
+        .card h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .control-group {
+            margin-bottom: 25px;
+        }
+
+        .control-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .control-group input[type="range"] {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #ddd;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .control-group input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .control-group input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .value-display {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .toggle-switch {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #667eea;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        button {
+            flex: 1;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #e9ecef;
+            color: #495057;
+        }
+
+        .btn-secondary:hover {
+            background: #dee2e6;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .canvas-container {
+            position: relative;
+            background: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.07);
+            overflow: hidden;
+        }
+
+        #demoCanvas {
+            display: block;
+            width: 100%;
+            height: 500px;
+            border: 3px solid #667eea;
+            border-radius: 15px;
+            cursor: crosshair;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid #e9ecef;
+        }
+
+        .stat-value {
+            font-size: 2em;
+            font-weight: 700;
+            color: #667eea;
+            display: block;
+        }
+
+        .stat-label {
+            color: #6c757d;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        .info-box {
+            background: #e7f3ff;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+        }
+
+        .info-box strong {
+            color: #667eea;
+        }
+
+        .log-container {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            border-radius: 10px;
+            padding: 20px;
+            max-height: 250px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        .log-entry {
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+
+        .log-entry .timestamp {
+            color: #4ec9b0;
+        }
+
+        .log-entry .mouse {
+            color: #ce9178;
+        }
+
+        .log-entry .position {
+            color: #dcdcaa;
+        }
+
+        .emoji {
+            font-size: 1.2em;
+        }
+
+        .hot-corner {
+            position: absolute;
+            background: rgba(220, 53, 69, 0.2);
+            border: 2px dashed #dc3545;
+            pointer-events: none;
+        }
+
+        @media (max-width: 1024px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .mode-indicator {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .mode-active {
+            background: #28a745;
+            color: white;
+        }
+
+        .mode-inactive {
+            background: #6c757d;
+            color: white;
+        }
+
+        .command-box {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin-top: 15px;
+            position: relative;
+        }
+
+        .command-box code {
+            color: #a6e22e;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 5px 10px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8em;
+        }
+
+        .copy-btn:hover {
+            background: #5568d3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🐁 Mouse Rover</h1>
+            <p>Interactive Demo - Understanding Automatic Mouse Movement</p>
+        </header>
+
+        <div class="content">
+            <div class="left-panel">
+                <!-- Control Panel -->
+                <div class="card">
+                    <h2>⚙️ Control Panel</h2>
+
+                    <div class="control-group">
+                        <label>
+                            Trigger Interval (seconds)
+                            <span class="value-display" id="timeValue">10</span>
+                        </label>
+                        <input type="range" id="timeSlider" min="1" max="30" value="10">
+                        <div class="info-box">
+                            <strong>Description:</strong> Program checks mouse position at this interval
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label>Movement Mode</label>
+                        <div class="toggle-switch">
+                            <span>Large Range</span>
+                            <label class="switch">
+                                <input type="checkbox" id="smallToggle">
+                                <span class="slider"></span>
+                            </label>
+                            <span>Small Range</span>
+                        </div>
+                        <div class="info-box">
+                            <strong>Small Range:</strong> Moves ±10 pixels around current position<br>
+                            <strong>Large Range:</strong> Random movement across entire screen
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label>Execution Mode</label>
+                        <div class="toggle-switch">
+                            <span>Once</span>
+                            <label class="switch">
+                                <input type="checkbox" id="alwaysToggle" checked>
+                                <span class="slider"></span>
+                            </label>
+                            <span>Always</span>
+                        </div>
+                        <div class="info-box">
+                            <strong>Once:</strong> Auto-stop when user moves mouse<br>
+                            <strong>Always:</strong> Continues running even when user moves mouse
+                        </div>
+                    </div>
+
+                    <div class="button-group">
+                        <button class="btn-primary" id="startBtn">▶️ Start Demo</button>
+                        <button class="btn-danger" id="stopBtn">⏹️ Stop Demo</button>
+                        <button class="btn-secondary" id="resetBtn">🔄 Reset</button>
+                    </div>
+
+                    <div class="command-box">
+                        <code id="commandDisplay">$ python mouse-rover.py -t10 -a</code>
+                        <button class="copy-btn" onclick="copyCommand()">Copy</button>
+                    </div>
+                </div>
+
+                <!-- Statistics -->
+                <div class="card">
+                    <h2>📊 Statistics</h2>
+                    <div class="stats">
+                        <div class="stat-card">
+                            <span class="stat-value" id="moveCount">0</span>
+                            <span class="stat-label">Move Count</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-value" id="statusDisplay">Stopped</span>
+                            <span class="stat-label">Current Status</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-value" id="positionX">0</span>
+                            <span class="stat-label">X Position</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-value" id="positionY">0</span>
+                            <span class="stat-label">Y Position</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Activity Log -->
+                <div class="card">
+                    <h2>📝 Activity Log</h2>
+                    <div class="log-container" id="logContainer">
+                        <div class="log-entry">
+                            <span class="timestamp">[System]</span> Ready. Click "Start Demo" to begin
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Visualization Canvas -->
+            <div>
+                <div class="card">
+                    <h2>🖥️ Visualization Canvas</h2>
+                    <div class="canvas-container">
+                        <canvas id="demoCanvas"></canvas>
+                    </div>
+                    <div class="info-box" style="margin-top: 15px;">
+                        <strong>Interaction Guide:</strong><br>
+                        • Click anywhere on canvas to simulate "user mouse movement"<br>
+                        • Red dashed area is "Hot Corner" boundary (avoids triggering system functions)<br>
+                        • Green circle represents program auto-movement position<br>
+                        • Blue circle represents user manual movement position
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Canvas setup
+        const canvas = document.getElementById('demoCanvas');
+        const ctx = canvas.getContext('2d');
+        const BORDER_SIZE = 10;
+        let canvasWidth, canvasHeight;
+
+        function resizeCanvas() {
+            const container = canvas.parentElement;
+            canvasWidth = container.clientWidth - 6;
+            canvasHeight = 500;
+            canvas.width = canvasWidth;
+            canvas.height = canvasHeight;
+            drawHotCorners();
+        }
+
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        // Draw Hot Corner zones
+        function drawHotCorners() {
+            ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+            ctx.strokeStyle = '#dc3545';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 5]);
+            ctx.strokeRect(0, 0, BORDER_SIZE, canvasHeight);
+            ctx.strokeRect(canvasWidth - BORDER_SIZE, 0, BORDER_SIZE, canvasHeight);
+            ctx.strokeRect(0, 0, canvasWidth, BORDER_SIZE);
+            ctx.strokeRect(0, canvasHeight - BORDER_SIZE, canvasWidth, BORDER_SIZE);
+            ctx.setLineDash([]);
+        }
+
+        // State variables
+        let isRunning = false;
+        let moveCount = 0;
+        let currentX = canvasWidth / 2;
+        let currentY = canvasHeight / 2;
+        let previousX = currentX;
+        let previousY = currentY;
+        let intervalId = null;
+        let userMoved = false;
+
+        // Controls
+        const timeSlider = document.getElementById('timeSlider');
+        const timeValue = document.getElementById('timeValue');
+        const smallToggle = document.getElementById('smallToggle');
+        const alwaysToggle = document.getElementById('alwaysToggle');
+        const startBtn = document.getElementById('startBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const commandDisplay = document.getElementById('commandDisplay');
+
+        // Update command display
+        function updateCommand() {
+            const time = timeSlider.value;
+            const small = smallToggle.checked ? ' -s' : '';
+            const always = alwaysToggle.checked ? ' -a' : '';
+            commandDisplay.textContent = `$ python mouse-rover.py -t${time}${always}${small}`;
+        }
+
+        timeSlider.addEventListener('input', (e) => {
+            timeValue.textContent = e.target.value;
+            updateCommand();
+        });
+
+        smallToggle.addEventListener('change', updateCommand);
+        alwaysToggle.addEventListener('change', updateCommand);
+
+        // Logging function
+        function addLog(message, type = 'info') {
+            const logContainer = document.getElementById('logContainer');
+            const timestamp = new Date().toLocaleTimeString('en-US');
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            entry.innerHTML = `<span class="timestamp">[${timestamp}]</span> ${message}`;
+            logContainer.appendChild(entry);
+            logContainer.scrollTop = logContainer.scrollHeight;
+        }
+
+        // Draw mouse position
+        function drawMouse(x, y, color = '#28a745', label = 'Auto') {
+            ctx.beginPath();
+            ctx.arc(x, y, 8, 0, 2 * Math.PI);
+            ctx.fillStyle = color;
+            ctx.fill();
+            ctx.strokeStyle = 'white';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Draw label
+            ctx.fillStyle = color;
+            ctx.font = 'bold 12px sans-serif';
+            ctx.fillText(label, x + 12, y - 8);
+        }
+
+        // Check if in Hot Corner
+        function isInHotCorner(x, y) {
+            return x < BORDER_SIZE || x > canvasWidth - BORDER_SIZE ||
+                   y < BORDER_SIZE || y > canvasHeight - BORDER_SIZE;
+        }
+
+        // Move to next location
+        function moveToNextLocation() {
+            previousX = currentX;
+            previousY = currentY;
+
+            const isSmall = smallToggle.checked;
+            let nextX, nextY;
+
+            if (isSmall) {
+                nextX = currentX + (Math.random() * 20 - 10);
+                nextY = currentY + (Math.random() * 20 - 10);
+
+                if (isInHotCorner(nextX, nextY)) {
+                    nextX = canvasWidth / 2;
+                    nextY = canvasHeight / 2;
+                    addLog('<span class="emoji">⚠️</span> Hot Corner detected, moving to screen center');
+                }
+            } else {
+                nextX = BORDER_SIZE + Math.random() * (canvasWidth - 2 * BORDER_SIZE);
+                nextY = BORDER_SIZE + Math.random() * (canvasHeight - 2 * BORDER_SIZE);
+            }
+
+            currentX = Math.max(BORDER_SIZE, Math.min(canvasWidth - BORDER_SIZE, nextX));
+            currentY = Math.max(BORDER_SIZE, Math.min(canvasHeight - BORDER_SIZE, nextY));
+
+            drawHotCorners();
+            drawMouse(currentX, currentY, '#28a745', '🐱');
+
+            moveCount++;
+            document.getElementById('moveCount').textContent = moveCount;
+            document.getElementById('positionX').textContent = Math.round(currentX);
+            document.getElementById('positionY').textContent = Math.round(currentY);
+
+            addLog(`<span class="emoji">😺</span> Auto-moved to <span class="position">(${Math.round(currentX)}, ${Math.round(currentY)})</span>`);
+        }
+
+        // Main loop
+        function mainLoop() {
+            const curr = { x: currentX, y: currentY };
+            const prev = { x: previousX, y: previousY };
+
+            if (curr.x !== prev.x || curr.y !== prev.y) {
+                if (!alwaysToggle.checked && userMoved) {
+                    addLog('<span class="emoji">👋</span> User movement detected, stopping execution');
+                    stopDemo();
+                    return;
+                }
+                addLog(`<span class="emoji">🐁</span> Position changed to <span class="position">(${Math.round(curr.x)}, ${Math.round(curr.y)})</span>`);
+                previousX = currentX;
+                previousY = currentY;
+                userMoved = false;
+            } else {
+                moveToNextLocation();
+            }
+        }
+
+        // Start demo
+        function startDemo() {
+            if (isRunning) return;
+
+            isRunning = true;
+            moveCount = 0;
+            userMoved = false;
+            startBtn.disabled = true;
+            stopBtn.disabled = false;
+            document.getElementById('statusDisplay').textContent = 'Running';
+
+            addLog('<span class="emoji">🚀</span> Demo started');
+
+            const interval = timeSlider.value * 1000;
+            intervalId = setInterval(mainLoop, interval);
+        }
+
+        // Stop demo
+        function stopDemo() {
+            if (!isRunning) return;
+
+            isRunning = false;
+            clearInterval(intervalId);
+            startBtn.disabled = false;
+            stopBtn.disabled = true;
+            document.getElementById('statusDisplay').textContent = 'Stopped';
+
+            addLog('<span class="emoji">⏹️</span> Demo stopped');
+        }
+
+        // Reset
+        function resetDemo() {
+            stopDemo();
+            moveCount = 0;
+            currentX = canvasWidth / 2;
+            currentY = canvasHeight / 2;
+            previousX = currentX;
+            previousY = currentY;
+            userMoved = false;
+
+            document.getElementById('moveCount').textContent = '0';
+            document.getElementById('positionX').textContent = Math.round(currentX);
+            document.getElementById('positionY').textContent = Math.round(currentY);
+            document.getElementById('logContainer').innerHTML = '<div class="log-entry"><span class="timestamp">[System]</span> Reset complete, ready to start</div>';
+
+            drawHotCorners();
+            drawMouse(currentX, currentY, '#6c757d', 'Initial');
+        }
+
+        // Canvas click event (simulate user mouse movement)
+        canvas.addEventListener('click', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            currentX = e.clientX - rect.left;
+            currentY = e.clientY - rect.top;
+            userMoved = true;
+
+            drawHotCorners();
+            drawMouse(currentX, currentY, '#007bff', '👆');
+
+            document.getElementById('positionX').textContent = Math.round(currentX);
+            document.getElementById('positionY').textContent = Math.round(currentY);
+
+            addLog(`<span class="emoji">👆</span> User clicked at <span class="position">(${Math.round(currentX)}, ${Math.round(currentY)})</span>`);
+        });
+
+        // Copy command
+        function copyCommand() {
+            const text = commandDisplay.textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = event.target;
+                btn.textContent = 'Copied!';
+                setTimeout(() => btn.textContent = 'Copy', 2000);
+            });
+        }
+
+        // Button events
+        startBtn.addEventListener('click', startDemo);
+        stopBtn.addEventListener('click', stopDemo);
+        resetBtn.addEventListener('click', resetDemo);
+
+        // Initialize
+        stopBtn.disabled = true;
+        drawHotCorners();
+        drawMouse(currentX, currentY, '#6c757d', 'Initial');
+        document.getElementById('positionX').textContent = Math.round(currentX);
+        document.getElementById('positionY').textContent = Math.round(currentY);
+    </script>
+</body>
+</html>
