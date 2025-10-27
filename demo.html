@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mouse Rover - 互動式演示</title>
+    <title>Mouse Rover - Interactive Demo</title>
     <style>
         * {
             margin: 0;
@@ -379,117 +379,117 @@
     <div class="container">
         <header>
             <h1>🐁 Mouse Rover</h1>
-            <p>互動式演示 - 理解滑鼠自動移動的工作原理</p>
+            <p>Interactive Demo - Understanding Automatic Mouse Movement</p>
         </header>
 
         <div class="content">
             <div class="left-panel">
-                <!-- 控制面板 -->
+                <!-- Control Panel -->
                 <div class="card">
-                    <h2>⚙️ 控制面板</h2>
+                    <h2>⚙️ Control Panel</h2>
 
                     <div class="control-group">
                         <label>
-                            觸發間隔 (秒)
+                            Trigger Interval (seconds)
                             <span class="value-display" id="timeValue">10</span>
                         </label>
                         <input type="range" id="timeSlider" min="1" max="30" value="10">
                         <div class="info-box">
-                            <strong>說明：</strong>程式每隔這段時間檢查一次滑鼠位置
+                            <strong>Description:</strong> Program checks mouse position at this interval
                         </div>
                     </div>
 
                     <div class="control-group">
-                        <label>移動模式</label>
+                        <label>Movement Mode</label>
                         <div class="toggle-switch">
-                            <span>大範圍移動</span>
+                            <span>Large Range</span>
                             <label class="switch">
                                 <input type="checkbox" id="smallToggle">
                                 <span class="slider"></span>
                             </label>
-                            <span>小範圍移動</span>
+                            <span>Small Range</span>
                         </div>
                         <div class="info-box">
-                            <strong>小範圍：</strong>在當前位置附近移動 ±10 像素<br>
-                            <strong>大範圍：</strong>在整個螢幕範圍內隨機移動
+                            <strong>Small Range:</strong> Moves ±10 pixels around current position<br>
+                            <strong>Large Range:</strong> Random movement across entire screen
                         </div>
                     </div>
 
                     <div class="control-group">
-                        <label>執行模式</label>
+                        <label>Execution Mode</label>
                         <div class="toggle-switch">
-                            <span>單次執行</span>
+                            <span>Once</span>
                             <label class="switch">
                                 <input type="checkbox" id="alwaysToggle" checked>
                                 <span class="slider"></span>
                             </label>
-                            <span>持續執行</span>
+                            <span>Always</span>
                         </div>
                         <div class="info-box">
-                            <strong>單次：</strong>偵測到使用者移動滑鼠後自動停止<br>
-                            <strong>持續：</strong>持續運行，即使使用者移動滑鼠
+                            <strong>Once:</strong> Auto-stop when user moves mouse<br>
+                            <strong>Always:</strong> Continues running even when user moves mouse
                         </div>
                     </div>
 
                     <div class="button-group">
-                        <button class="btn-primary" id="startBtn">▶️ 開始演示</button>
-                        <button class="btn-danger" id="stopBtn">⏹️ 停止演示</button>
-                        <button class="btn-secondary" id="resetBtn">🔄 重置</button>
+                        <button class="btn-primary" id="startBtn">▶️ Start Demo</button>
+                        <button class="btn-danger" id="stopBtn">⏹️ Stop Demo</button>
+                        <button class="btn-secondary" id="resetBtn">🔄 Reset</button>
                     </div>
 
                     <div class="command-box">
                         <code id="commandDisplay">$ python mouse-rover.py -t10 -a</code>
-                        <button class="copy-btn" onclick="copyCommand()">複製</button>
+                        <button class="copy-btn" onclick="copyCommand()">Copy</button>
                     </div>
                 </div>
 
-                <!-- 統計資訊 -->
+                <!-- Statistics -->
                 <div class="card">
-                    <h2>📊 統計資訊</h2>
+                    <h2>📊 Statistics</h2>
                     <div class="stats">
                         <div class="stat-card">
                             <span class="stat-value" id="moveCount">0</span>
-                            <span class="stat-label">移動次數</span>
+                            <span class="stat-label">Move Count</span>
                         </div>
                         <div class="stat-card">
-                            <span class="stat-value" id="statusDisplay">停止</span>
-                            <span class="stat-label">當前狀態</span>
+                            <span class="stat-value" id="statusDisplay">Stopped</span>
+                            <span class="stat-label">Current Status</span>
                         </div>
                         <div class="stat-card">
                             <span class="stat-value" id="positionX">0</span>
-                            <span class="stat-label">X 座標</span>
+                            <span class="stat-label">X Position</span>
                         </div>
                         <div class="stat-card">
                             <span class="stat-value" id="positionY">0</span>
-                            <span class="stat-label">Y 座標</span>
+                            <span class="stat-label">Y Position</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- 活動日誌 -->
+                <!-- Activity Log -->
                 <div class="card">
-                    <h2>📝 活動日誌</h2>
+                    <h2>📝 Activity Log</h2>
                     <div class="log-container" id="logContainer">
                         <div class="log-entry">
-                            <span class="timestamp">[系統]</span> 準備就緒，點擊「開始演示」開始
+                            <span class="timestamp">[System]</span> Ready. Click "Start Demo" to begin
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- 視覺化畫布 -->
+            <!-- Visualization Canvas -->
             <div>
                 <div class="card">
-                    <h2>🖥️ 視覺化畫布</h2>
+                    <h2>🖥️ Visualization Canvas</h2>
                     <div class="canvas-container">
                         <canvas id="demoCanvas"></canvas>
                     </div>
                     <div class="info-box" style="margin-top: 15px;">
-                        <strong>互動說明：</strong><br>
-                        • 點擊畫布任意位置來模擬「使用者移動滑鼠」<br>
-                        • 紅色虛線區域為「Hot Corner」邊界（避免觸發系統功能）<br>
-                        • 綠色圓圈代表程式自動移動的位置<br>
-                        • 藍色圓圈代表使用者手動移動的位置
+                        <strong>Interaction Guide:</strong><br>
+                        • Click anywhere on canvas to simulate "user mouse movement"<br>
+                        • Red dashed area is "Hot Corner" boundary (avoids triggering system functions)<br>
+                        • Green circle represents program auto-movement position<br>
+                        • Blue circle represents user manual movement position
                     </div>
                 </div>
             </div>
@@ -497,7 +497,7 @@
     </div>
 
     <script>
-        // Canvas 設置
+        // Canvas setup
         const canvas = document.getElementById('demoCanvas');
         const ctx = canvas.getContext('2d');
         const BORDER_SIZE = 10;
@@ -515,7 +515,7 @@
         resizeCanvas();
         window.addEventListener('resize', resizeCanvas);
 
-        // 繪製 Hot Corner 區域
+        // Draw Hot Corner zones
         function drawHotCorners() {
             ctx.clearRect(0, 0, canvasWidth, canvasHeight);
             ctx.strokeStyle = '#dc3545';
@@ -528,7 +528,7 @@
             ctx.setLineDash([]);
         }
 
-        // 狀態變數
+        // State variables
         let isRunning = false;
         let moveCount = 0;
         let currentX = canvasWidth / 2;
@@ -538,7 +538,7 @@
         let intervalId = null;
         let userMoved = false;
 
-        // 控制項
+        // Controls
         const timeSlider = document.getElementById('timeSlider');
         const timeValue = document.getElementById('timeValue');
         const smallToggle = document.getElementById('smallToggle');
@@ -548,7 +548,7 @@
         const resetBtn = document.getElementById('resetBtn');
         const commandDisplay = document.getElementById('commandDisplay');
 
-        // 更新命令顯示
+        // Update command display
         function updateCommand() {
             const time = timeSlider.value;
             const small = smallToggle.checked ? ' -s' : '';
@@ -564,10 +564,10 @@
         smallToggle.addEventListener('change', updateCommand);
         alwaysToggle.addEventListener('change', updateCommand);
 
-        // 日誌功能
+        // Logging function
         function addLog(message, type = 'info') {
             const logContainer = document.getElementById('logContainer');
-            const timestamp = new Date().toLocaleTimeString('zh-TW');
+            const timestamp = new Date().toLocaleTimeString('en-US');
             const entry = document.createElement('div');
             entry.className = 'log-entry';
             entry.innerHTML = `<span class="timestamp">[${timestamp}]</span> ${message}`;
@@ -575,8 +575,8 @@
             logContainer.scrollTop = logContainer.scrollHeight;
         }
 
-        // 繪製滑鼠位置
-        function drawMouse(x, y, color = '#28a745', label = '自動') {
+        // Draw mouse position
+        function drawMouse(x, y, color = '#28a745', label = 'Auto') {
             ctx.beginPath();
             ctx.arc(x, y, 8, 0, 2 * Math.PI);
             ctx.fillStyle = color;
@@ -585,19 +585,19 @@
             ctx.lineWidth = 2;
             ctx.stroke();
 
-            // 繪製標籤
+            // Draw label
             ctx.fillStyle = color;
             ctx.font = 'bold 12px sans-serif';
             ctx.fillText(label, x + 12, y - 8);
         }
 
-        // 檢查是否在 Hot Corner
+        // Check if in Hot Corner
         function isInHotCorner(x, y) {
             return x < BORDER_SIZE || x > canvasWidth - BORDER_SIZE ||
                    y < BORDER_SIZE || y > canvasHeight - BORDER_SIZE;
         }
 
-        // 移動到下一個位置
+        // Move to next location
         function moveToNextLocation() {
             previousX = currentX;
             previousY = currentY;
@@ -612,7 +612,7 @@
                 if (isInHotCorner(nextX, nextY)) {
                     nextX = canvasWidth / 2;
                     nextY = canvasHeight / 2;
-                    addLog('<span class="emoji">⚠️</span> 偵測到 Hot Corner，移動到螢幕中央');
+                    addLog('<span class="emoji">⚠️</span> Hot Corner detected, moving to screen center');
                 }
             } else {
                 nextX = BORDER_SIZE + Math.random() * (canvasWidth - 2 * BORDER_SIZE);
@@ -630,21 +630,21 @@
             document.getElementById('positionX').textContent = Math.round(currentX);
             document.getElementById('positionY').textContent = Math.round(currentY);
 
-            addLog(`<span class="emoji">😺</span> 自動移動到 <span class="position">(${Math.round(currentX)}, ${Math.round(currentY)})</span>`);
+            addLog(`<span class="emoji">😺</span> Auto-moved to <span class="position">(${Math.round(currentX)}, ${Math.round(currentY)})</span>`);
         }
 
-        // 主循環
+        // Main loop
         function mainLoop() {
             const curr = { x: currentX, y: currentY };
             const prev = { x: previousX, y: previousY };
 
             if (curr.x !== prev.x || curr.y !== prev.y) {
                 if (!alwaysToggle.checked && userMoved) {
-                    addLog('<span class="emoji">👋</span> 偵測到使用者移動，停止執行');
+                    addLog('<span class="emoji">👋</span> User movement detected, stopping execution');
                     stopDemo();
                     return;
                 }
-                addLog(`<span class="emoji">🐁</span> 位置變更到 <span class="position">(${Math.round(curr.x)}, ${Math.round(curr.y)})</span>`);
+                addLog(`<span class="emoji">🐁</span> Position changed to <span class="position">(${Math.round(curr.x)}, ${Math.round(curr.y)})</span>`);
                 previousX = currentX;
                 previousY = currentY;
                 userMoved = false;
@@ -653,7 +653,7 @@
             }
         }
 
-        // 開始演示
+        // Start demo
         function startDemo() {
             if (isRunning) return;
 
@@ -662,15 +662,15 @@
             userMoved = false;
             startBtn.disabled = true;
             stopBtn.disabled = false;
-            document.getElementById('statusDisplay').textContent = '運行中';
+            document.getElementById('statusDisplay').textContent = 'Running';
 
-            addLog('<span class="emoji">🚀</span> 開始演示');
+            addLog('<span class="emoji">🚀</span> Demo started');
 
             const interval = timeSlider.value * 1000;
             intervalId = setInterval(mainLoop, interval);
         }
 
-        // 停止演示
+        // Stop demo
         function stopDemo() {
             if (!isRunning) return;
 
@@ -678,12 +678,12 @@
             clearInterval(intervalId);
             startBtn.disabled = false;
             stopBtn.disabled = true;
-            document.getElementById('statusDisplay').textContent = '停止';
+            document.getElementById('statusDisplay').textContent = 'Stopped';
 
-            addLog('<span class="emoji">⏹️</span> 停止演示');
+            addLog('<span class="emoji">⏹️</span> Demo stopped');
         }
 
-        // 重置
+        // Reset
         function resetDemo() {
             stopDemo();
             moveCount = 0;
@@ -696,13 +696,13 @@
             document.getElementById('moveCount').textContent = '0';
             document.getElementById('positionX').textContent = Math.round(currentX);
             document.getElementById('positionY').textContent = Math.round(currentY);
-            document.getElementById('logContainer').innerHTML = '<div class="log-entry"><span class="timestamp">[系統]</span> 已重置，準備就緒</div>';
+            document.getElementById('logContainer').innerHTML = '<div class="log-entry"><span class="timestamp">[System]</span> Reset complete, ready to start</div>';
 
             drawHotCorners();
-            drawMouse(currentX, currentY, '#6c757d', '初始');
+            drawMouse(currentX, currentY, '#6c757d', 'Initial');
         }
 
-        // Canvas 點擊事件（模擬使用者移動滑鼠）
+        // Canvas click event (simulate user mouse movement)
         canvas.addEventListener('click', (e) => {
             const rect = canvas.getBoundingClientRect();
             currentX = e.clientX - rect.left;
@@ -715,28 +715,28 @@
             document.getElementById('positionX').textContent = Math.round(currentX);
             document.getElementById('positionY').textContent = Math.round(currentY);
 
-            addLog(`<span class="emoji">👆</span> 使用者點擊 <span class="position">(${Math.round(currentX)}, ${Math.round(currentY)})</span>`);
+            addLog(`<span class="emoji">👆</span> User clicked at <span class="position">(${Math.round(currentX)}, ${Math.round(currentY)})</span>`);
         });
 
-        // 複製命令
+        // Copy command
         function copyCommand() {
             const text = commandDisplay.textContent;
             navigator.clipboard.writeText(text).then(() => {
                 const btn = event.target;
-                btn.textContent = '已複製!';
-                setTimeout(() => btn.textContent = '複製', 2000);
+                btn.textContent = 'Copied!';
+                setTimeout(() => btn.textContent = 'Copy', 2000);
             });
         }
 
-        // 按鈕事件
+        // Button events
         startBtn.addEventListener('click', startDemo);
         stopBtn.addEventListener('click', stopDemo);
         resetBtn.addEventListener('click', resetDemo);
 
-        // 初始化
+        // Initialize
         stopBtn.disabled = true;
         drawHotCorners();
-        drawMouse(currentX, currentY, '#6c757d', '初始');
+        drawMouse(currentX, currentY, '#6c757d', 'Initial');
         document.getElementById('positionX').textContent = Math.round(currentX);
         document.getElementById('positionY').textContent = Math.round(currentY);
     </script>
