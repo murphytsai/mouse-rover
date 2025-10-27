@@ -6,7 +6,7 @@
 
 ## Documentation
 
-- **[Interactive Demo](https://htmlpreview.github.io/?https://github.com/murphytsai/mouse-rover/blob/main/demo.html)** - Try it online! See how Mouse Rover works visually
+- **[Interactive Demo](https://murphytsai.github.io/mouse-rover/demo.html)** - Try it online! See how Mouse Rover works visually
   - Or download [demo.html](demo.html) and open locally in your browser
 - **[Design Specification](DESIGN_SPEC.md)** - Complete design guide for Figma/UI implementation
 
